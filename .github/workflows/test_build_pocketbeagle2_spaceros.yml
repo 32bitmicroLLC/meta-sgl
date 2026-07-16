@@ -1,4 +1,4 @@
-name: BeagleV-Fire + SpaceROS
+name: PocketBeagle2 + SpaceROS
 
 on:
   push:
