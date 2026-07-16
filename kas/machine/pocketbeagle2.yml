@@ -1,0 +1,20 @@
+header:
+  version: 14
+
+machine: "pocketbeagle2"
+
+repos:
+  arm:
+    url: "https://git.yoctoproject.org/meta-arm"
+    path: "layers/meta-arm"
+    layers:
+      meta-arm:
+      meta-arm-toolchain:
+
+  beagle:
+    url: "https://git.yoctoproject.org/meta-ti"
+    path: "layers/meta-ti"
+    layers:
+      meta-beagle:
+      meta-ti-bsp:
+      meta-ti-extras:
