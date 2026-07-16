@@ -1,0 +1,17 @@
+name: BeagleV-Fire + SpaceROS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-sgl.yml
+    with:
+      kas_config: sgl-scarthgap-spaceros-jazzy-2026.04-core-pocketbeagle2.yml
+      hardware_arch: pocketbeagle2 
+      build_profile: spaceros

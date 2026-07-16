@@ -1,0 +1,16 @@
+name: PocketBeagle2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-sgl.yml
+    with:
+      kas_config: sgl-scarthgap-pocketbeagle2.yml 
+      hardware_arch: pocketbeagle2 
