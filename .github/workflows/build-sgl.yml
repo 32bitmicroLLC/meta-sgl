@@ -11,14 +11,6 @@ on:
         description: 'Hardware architecture identifier for caching'
         required: true
         type: string
-      runner_arch:
-        description: 'Runner architecture: arm64 or x64'
-        type: string
-        default: 'arm64'
-      runner_size:
-        description: 'Runner size: default (32-cpu) or xlarge (64-cpu)'
-        type: string
-        default: 'default'
       build_profile:
         description: 'Build profile for cache isolation (e.g. sgl, spaceros)'
         type: string
@@ -30,21 +22,19 @@ env:
 
 jobs:
   build:
-    runs-on: >-
-      runs-on=${{ github.run_id }}/runner=${{ inputs.runner_size }}-${{ inputs.runner_arch }}
+    runs-on: ubuntu-latest
     env:
       KAS_WORK_DIR: "${{ github.workspace }}/kas-build"
       HARDWARE_ARCH: ${{ inputs.hardware_arch }}
 
     steps:
-      - uses: runs-on/action@v2
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
           path: kas-build/layers/meta-sgl
 
       - name: Set up cache for Yocto downloads
-        uses: runs-on/cache@v4
+        uses: actions/cache@v4
         with:
           path: ${{ env.KAS_WORK_DIR }}/build/downloads
           key: ${{ runner.os }}-yocto-downloads-${{ env.HARDWARE_ARCH }}-${{ inputs.build_profile }}-${{ hashFiles('kas-build/layers/meta-sgl/kas/**/*.yml') }}
@@ -53,7 +43,7 @@ jobs:
             ${{ runner.os }}-yocto-downloads-${{ env.HARDWARE_ARCH }}-
 
       - name: Set up cache for sstate
-        uses: runs-on/cache@v4
+        uses: actions/cache@v4
         with:
           path: ${{ env.KAS_WORK_DIR }}/build/sstate-cache
           key: ${{ runner.os }}-yocto-sstate-${{ env.HARDWARE_ARCH }}-${{ inputs.build_profile }}-${{ hashFiles('kas-build/layers/meta-sgl/kas/**/*.yml') }}
@@ -62,10 +52,11 @@ jobs:
             ${{ runner.os }}-yocto-sstate-${{ env.HARDWARE_ARCH }}-
 
       - name: Cache apt packages
-        uses: runs-on/cache@v4
+        uses: actions/cache@v4
         with:
           path: ${{ env.APT_CACHE_DIR }}
           key: ${{ runner.os }}-apt-${{ runner.arch }}-yocto-host-deps
+      
       - name: Install host dependencies
         run: |
           sudo apt-get update
